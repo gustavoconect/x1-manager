@@ -140,7 +140,7 @@ const Sidebar = ({ blacklist, history, onNewDuel, onFullReset }) => {
                                                     <img src={match.game_1.image} className="w-10 h-10 rounded-full border border-blue-500" />
                                                     <div>
                                                         <div className="font-bold text-sm">{match.game_1.champion}</div>
-                                                        <div className="text-xs text-gray-400">{match.game_1.player}</div>
+                                                        <div className="text-xs text-gray-400">{match.player_a} vs {match.player_b}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -150,7 +150,7 @@ const Sidebar = ({ blacklist, history, onNewDuel, onFullReset }) => {
                                                     <img src={match.game_2.image} className="w-10 h-10 rounded-full border border-red-500" />
                                                     <div>
                                                         <div className="font-bold text-sm">{match.game_2.champion}</div>
-                                                        <div className="text-xs text-gray-400">{match.game_2.player}</div>
+                                                        <div className="text-xs text-gray-400">{match.player_a} vs {match.player_b}</div>
                                                     </div>
                                                 </div>
                                             </div>

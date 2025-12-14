@@ -136,6 +136,12 @@ class GameManager:
             p1 = self.state["player_a"]
             p2 = self.state["player_b"]
             
+            # Get player histories to prioritize unused champs
+            players_data = get_players()
+            p1_history = set(players_data.get(p1, {}).get("history", []))
+            p2_history = set(players_data.get(p2, {}).get("history", []))
+            both_history = p1_history | p2_history  # Union of both histories
+            
             # Note: Older blacklist entries might not have 'player' key if migrated. Handle gracefully.
             relevant_bans = set()
             for entry in blacklist:
@@ -145,12 +151,17 @@ class GameManager:
             
             available = [c for c in candidates if c not in relevant_bans]
             
-        # Step 3: Emergency Fallback - Use entire lane pool? (Prompt: "liberar campeões que apenas os dois não jogaram")
-        # Creating 'available' above technically satisfies this.
-        # If still < 4, it means they have played almost EVERY champion in that lane. 
-        # In that case, we might just have to sample from 'candidates' allowing repeats or error.
+            # If still short, prioritize champs not in either player's history
+            if len(available) < 4:
+                # Get champs not used by either player (even if in global blacklist)
+                unused_by_both = [c for c in candidates if c not in both_history]
+                # Sort: prioritize truly unused, then allow used ones
+                available = unused_by_both + [c for c in candidates if c not in unused_by_both]
+                available = list(dict.fromkeys(available))  # Remove duplicates, preserve order
+            
+        # Step 3: Emergency Fallback - Use entire lane pool
         if len(available) < 4:
-            available = candidates # Reset pool completely for this rare edge case
+            available = candidates
             
         if len(available) >= 4:
             self.state["drawn_champions"] = random.sample(available, 4)

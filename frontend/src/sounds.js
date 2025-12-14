@@ -1,32 +1,39 @@
 // Sound utility for X1 Manager
 // Uses lazy loading to prevent lag
 
-// UI Sound Effects (short, cached)
+// UI Sound Effects - using reliable LoL champion select sounds
 const UI_SOUNDS = {
-    hover: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-uikit/global/default/sounds/sfx-uikit-button-gold-hover.ogg",
-    click: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-uikit/global/default/sounds/sfx-uikit-button-gold-click.ogg",
+    // Using champion select sounds that are known to exist
+    hover: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-timer-tick.ogg",
+    click: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-confirm-choice.ogg",
     lock: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-lockin-button-click.ogg",
-    ban: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-ban-champion.ogg",
-    reveal: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-reveal-champion.ogg",
-    timer: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-timer-tick.ogg"
+    ban: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-draft-ban.ogg",
+    reveal: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-draft-pick.ogg",
+    phase: "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-draft-turn-notification.ogg"
 };
 
 // Champion ID mapping (name -> id) for voice lookup
-// This is a subset - we'll build dynamically from DDragon if needed
 let championIdMap = {};
 
 // Audio cache to prevent reloading
 const audioCache = {};
+let soundsLoaded = false;
 
 // Preload common UI sounds
 export const preloadUISounds = () => {
+    if (soundsLoaded) return;
+
     Object.entries(UI_SOUNDS).forEach(([key, url]) => {
         const audio = new Audio();
         audio.preload = "auto";
         audio.src = url;
-        audio.volume = 0.3;
+        audio.volume = 0.4;
+        audio.load(); // Force load
         audioCache[key] = audio;
     });
+
+    soundsLoaded = true;
+    console.log("Sounds preloaded");
 };
 
 // Play a cached UI sound

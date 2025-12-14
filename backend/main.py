@@ -68,6 +68,24 @@ def reroll_draw():
     game_instance.draw_champions()
     return game_instance.state
 
+@app.post("/rule6-choice")
+def rule6_choice(choice: str):
+    """Lower Elo player chooses 'pick_order' or 'side'"""
+    game_instance.make_rule6_choice(choice)
+    return game_instance.state
+
+@app.post("/set-pick-order")
+def set_pick_order(first_picker: str):
+    """Pick order chooser decides who picks first: 'A' or 'B'"""
+    game_instance.set_pick_order(first_picker)
+    return game_instance.state
+
+@app.post("/set-map-side")
+def set_map_side(side: str):
+    """Side chooser picks their Game 1 side: 'Blue' or 'Red'"""
+    game_instance.set_map_side(side)
+    return game_instance.state
+
 @app.post("/reset-duel")
 def reset_duel():
     game_instance.archive_current_match()

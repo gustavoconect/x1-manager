@@ -10,12 +10,24 @@ class GameManager:
             "player_b": "",
             "elo_a": "Ferro IV",
             "elo_b": "Ferro IV",
-            "start_player": None,
+            "pdl_a": 0,
+            "pdl_b": 0,
+            "start_player": None,  # Higher Elo - starts banning
+            "lower_elo_player": None,  # Lower Elo - chooses A/B after draw
             "current_action_player": None,
             "banned_lanes": [],
             "selected_lane": None,
             "drawn_champions": [],
+            # Rule 6 Choice Phase
+            "choice_made": False,  # Lower Elo made A/B choice
+            "pick_order_chooser": None,  # Who defines pick order ("A" or "B")
+            "side_chooser": None,  # Who chooses map side ("A" or "B")
+            "first_picker": None,  # Who picks first after order is set
             "picks": {},
+            # Side Choice Phase (after picks)
+            "side_choice_complete": False,
+            "game1_sides": {},  # {"A": "Blue", "B": "Red"}
+            # Persistent
             "global_blacklist": get_saved_blacklist(),
             "match_history": get_match_history(),
             "tournament_phase": "Groups"
@@ -31,12 +43,21 @@ class GameManager:
             "player_b": "",
             "elo_a": "Ferro IV",
             "elo_b": "Ferro IV",
+            "pdl_a": 0,
+            "pdl_b": 0,
             "start_player": None,
+            "lower_elo_player": None,
             "current_action_player": None,
             "banned_lanes": [],
             "selected_lane": None,
             "drawn_champions": [],
+            "choice_made": False,
+            "pick_order_chooser": None,
+            "side_chooser": None,
+            "first_picker": None,
             "picks": {},
+            "side_choice_complete": False,
+            "game1_sides": {},
             "global_blacklist": saved_bl,
             "match_history": saved_hist,
             "tournament_phase": "Groups"
@@ -52,28 +73,36 @@ class GameManager:
     def setup_game(self, p1, e1, pdl1, p2, e2, pdl2):
         self.state["player_a"] = p1
         self.state["elo_a"] = e1
+        self.state["pdl_a"] = pdl1
         self.state["player_b"] = p2
         self.state["elo_b"] = e2
+        self.state["pdl_b"] = pdl2
         
-        # Calculate starter (Higher Elo starts, PDL as tie-breaker)
+        # Calculate starter (Higher Elo starts banning, PDL as tie-breaker)
         val_a = ELO_HIERARCHY.get(e1, 0)
         val_b = ELO_HIERARCHY.get(e2, 0)
         
         if val_a > val_b:
             starter = "A"
+            lower = "B"
         elif val_b > val_a:
             starter = "B"
+            lower = "A"
         else:
             # Elo tie: use PDL as tie-breaker (Higher PDL starts)
             if pdl1 > pdl2:
                 starter = "A"
+                lower = "B"
             elif pdl2 > pdl1:
                 starter = "B"
+                lower = "A"
             else:
-                # Both Elo and PDL are equal: random
+                # Both equal: random
                 starter = random.choice(["A", "B"])
+                lower = "B" if starter == "A" else "A"
             
         self.state["start_player"] = starter
+        self.state["lower_elo_player"] = lower
         self.state["current_action_player"] = starter
         self.state["setup_complete"] = True
 
@@ -148,6 +177,50 @@ class GameManager:
         # Update Personal History
         update_player_history_db(player_name, champion)
 
+    # ========== RULE 6: Choice Phase Methods ==========
+    
+    def make_rule6_choice(self, choice: str):
+        """
+        Lower Elo player chooses between:
+        - 'pick_order': They define who picks first
+        - 'side': They get to choose map side after picks
+        """
+        lower = self.state["lower_elo_player"]
+        higher = "B" if lower == "A" else "A"
+        
+        if choice == "pick_order":
+            # Lower Elo defines pick order, Higher Elo chooses side after picks
+            self.state["pick_order_chooser"] = lower
+            self.state["side_chooser"] = higher
+        else:  # choice == "side"
+            # Higher Elo defines pick order, Lower Elo chooses side after picks
+            self.state["pick_order_chooser"] = higher
+            self.state["side_chooser"] = lower
+        
+        self.state["choice_made"] = True
+    
+    def set_pick_order(self, first_picker: str):
+        """
+        The pick_order_chooser decides who picks first.
+        first_picker: "A" or "B"
+        """
+        self.state["first_picker"] = first_picker
+    
+    def set_map_side(self, side: str):
+        """
+        The side_chooser picks their side for Game 1.
+        side: "Blue" or "Red"
+        The other player gets the opposite.
+        """
+        chooser = self.state["side_chooser"]
+        other = "B" if chooser == "A" else "A"
+        opposite = "Red" if side == "Blue" else "Blue"
+        
+        self.state["game1_sides"] = {
+            chooser: side,
+            other: opposite
+        }
+        self.state["side_choice_complete"] = True
 
 
     def register_player(self, name, elo="Ferro IV", pdl=0):

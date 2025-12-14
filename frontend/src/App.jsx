@@ -3,7 +3,7 @@ import api from './api';
 import Sidebar from './components/Sidebar';
 import SetupPhase from './components/SetupPhase';
 import LaneBanPhase from './components/LaneBanPhase';
-import PickPhase from './components/PickPhase';
+import ChoicePhase from './components/ChoicePhase';
 
 function App() {
     const [state, setState] = useState(null);
@@ -35,20 +35,8 @@ function App() {
         api.post(`/ban-lane`, { lane }).then(res => setState(res.data));
     };
 
-    const handleReroll = () => {
-        api.post(`/reroll-draw`).then(res => setState(res.data));
-    };
-
     const handleDraw = () => {
         api.post(`/draw`).then(res => setState(res.data));
-    };
-
-    const handlePick = (game, champion, image, player) => {
-        api.post(`/pick`, { game, champion, image, player }).then(res => setState(res.data));
-    };
-
-    const handleResetDraw = () => {
-        api.post(`/reset-duel`).then(res => setState(res.data));
     };
 
     const handleNewDuel = () => {
@@ -60,6 +48,9 @@ function App() {
             api.post(`/full-reset`).then(res => setState(res.data));
         }
     };
+
+    // Check if we should show ChoicePhase (lane selected, need to draw or already drawn)
+    const showChoicePhase = state.selected_lane;
 
     return (
         <div className="flex min-h-screen bg-bgDark font-outfit text-white selection:bg-primary selection:text-black">
@@ -86,17 +77,22 @@ function App() {
                     />
                 )}
 
-                {state.selected_lane && (
-                    <PickPhase
-                        lane={state.selected_lane}
-                        champions={state.drawn_champions}
-                        picks={state.picks}
-                        players={{ p1: state.player_a, p2: state.player_b }}
-                        onDraw={handleDraw}
-                        onPick={handlePick}
-                        onResetDraw={handleResetDraw}
-                        onNewDuel={handleNewDuel}
-                        onReroll={handleReroll}
+                {showChoicePhase && !state.drawn_champions?.length && (
+                    <div className="flex flex-col items-center justify-center h-[60vh] gap-8 animate-fade-in">
+                        <h2 className="text-4xl font-bold">Rota Definida: <span className="text-primary">{state.selected_lane}</span></h2>
+                        <button
+                            onClick={handleDraw}
+                            className="bg-primary text-black px-12 py-6 rounded-2xl text-2xl font-bold uppercase hover:scale-105 transition-transform flex items-center gap-4 shadow-[0_0_50px_rgba(212,175,55,0.3)]"
+                        >
+                            🎲 Sortear Campeões
+                        </button>
+                    </div>
+                )}
+
+                {showChoicePhase && state.drawn_champions?.length > 0 && (
+                    <ChoicePhase
+                        state={state}
+                        onStateUpdate={setState}
                     />
                 )}
             </div>

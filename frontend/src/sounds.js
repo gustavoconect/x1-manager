@@ -103,7 +103,7 @@ export const playChampionVoice = (championName) => {
         const champId = championIdMap[championName];
         if (!champId) {
             console.log("Champion ID not found for:", championName);
-            playUISound("reveal"); // Fallback to reveal sound
+            playLockSound(); // Fallback
             return;
         }
 
@@ -120,12 +120,12 @@ export const playChampionVoice = (championName) => {
             const fallback = new Audio(fallbackUrl);
             fallback.volume = 0.6;
             fallback.play().catch(() => {
-                playUISound("reveal"); // Final fallback
+                playLockSound(); // Final fallback
             });
         });
     } catch (e) {
         console.log("Voice error:", e);
-        playUISound("reveal");
+        playLockSound();
     }
 };
 
@@ -136,7 +136,6 @@ export const initializeSounds = () => {
 };
 
 export default {
-    playUISound,
     playHoverSound,
     playClickSound,
     playBanSound,

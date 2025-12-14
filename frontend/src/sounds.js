@@ -1,17 +1,17 @@
 // Sound utility for X1 Manager
 // Uses lazy loading to prevent lag
 
-// Lock sound URL (this one works!)
+// Lock sound URL (LoL Champion Select)
 const LOCK_SOUND_URL = "https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-lockin-button-click.ogg";
 
-// Champion ID mapping (name -> id) for voice lookup
+// Champion ID mapping (name -> numeric id) for voice lookup
 let championIdMap = {};
 
 // Audio cache
 const audioCache = {};
 let audioContext = null;
 
-// Get or create audio context
+// Get or create audio context for beep sounds
 const getAudioContext = () => {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -19,7 +19,7 @@ const getAudioContext = () => {
     return audioContext;
 };
 
-// Generate a simple beep sound using Web Audio API
+// Generate a beep sound using Web Audio API
 const playBeep = (frequency = 800, duration = 0.1, volume = 0.3) => {
     try {
         const ctx = getAudioContext();
@@ -38,32 +38,26 @@ const playBeep = (frequency = 800, duration = 0.1, volume = 0.3) => {
         oscillator.start(ctx.currentTime);
         oscillator.stop(ctx.currentTime + duration);
     } catch (e) {
-        console.log("Audio error:", e);
+        // Silently fail
     }
 };
 
 // Preload lock sound
-export const preloadUISounds = () => {
+const preloadLockSound = () => {
     const audio = new Audio();
     audio.preload = "auto";
     audio.src = LOCK_SOUND_URL;
     audio.volume = 0.5;
     audio.load();
     audioCache.lock = audio;
-    console.log("Lock sound preloaded");
 };
 
-// Play click sound (generated beep)
-export const playClickSound = () => {
-    playBeep(1000, 0.08, 0.2); // High-pitched short click
-};
-
-// Play ban sound (generated beep)
+// Play ban sound (low-pitched beep)
 export const playBanSound = () => {
-    playBeep(300, 0.2, 0.3); // Low-pitched ban sound
+    playBeep(300, 0.2, 0.3);
 };
 
-// Play lock-in sound (from Community Dragon - works!)
+// Play lock-in sound (from LoL)
 export const playLockSound = () => {
     try {
         if (audioCache.lock) {
@@ -72,20 +66,12 @@ export const playLockSound = () => {
             sound.play().catch(() => { });
         }
     } catch (e) {
-        console.log("Lock sound error:", e);
+        // Silently fail
     }
 };
 
-// Play hover sound (debounced)
-let hoverDebounce = null;
-export const playHoverSound = () => {
-    if (hoverDebounce) return;
-    hoverDebounce = setTimeout(() => { hoverDebounce = null; }, 50);
-    playBeep(1200, 0.03, 0.1); // Subtle beep for hover
-};
-
-// Fetch champion data to get IDs
-export const loadChampionIds = async () => {
+// Fetch champion data to get IDs for voice lookup
+const loadChampionIds = async () => {
     try {
         const response = await fetch("https://ddragon.leagueoflegends.com/cdn/13.24.1/data/pt_BR/champion.json");
         const data = await response.json();
@@ -93,7 +79,7 @@ export const loadChampionIds = async () => {
             championIdMap[champ.id] = champ.key; // id is name, key is numeric ID
         });
     } catch (e) {
-        console.log("Could not load champion IDs:", e);
+        // Silently fail - champion voices will fallback to lock sound
     }
 };
 
@@ -102,44 +88,29 @@ export const playChampionVoice = (championName) => {
     try {
         const champId = championIdMap[championName];
         if (!champId) {
-            console.log("Champion ID not found for:", championName);
-            playLockSound(); // Fallback
+            playLockSound();
             return;
         }
 
-        // Community Dragon champion pick voice URL
-        // Format: sfx-cs-{champId}-pick.ogg (not always available)
-        // Alternative: champion ban quote which is more reliable
         const voiceUrl = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/pt_br/v1/champion-choose-vo/${champId}.ogg`;
 
         const audio = new Audio(voiceUrl);
         audio.volume = 0.6;
         audio.play().catch(() => {
-            // If Portuguese voice not available, try default
+            // Try English fallback
             const fallbackUrl = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-choose-vo/${champId}.ogg`;
             const fallback = new Audio(fallbackUrl);
             fallback.volume = 0.6;
-            fallback.play().catch(() => {
-                playLockSound(); // Final fallback
-            });
+            fallback.play().catch(() => playLockSound());
         });
     } catch (e) {
-        console.log("Voice error:", e);
         playLockSound();
     }
 };
 
 // Initialize sounds on app load
 export const initializeSounds = () => {
-    preloadUISounds();
+    preloadLockSound();
     loadChampionIds();
 };
 
-export default {
-    playHoverSound,
-    playClickSound,
-    playBanSound,
-    playLockSound,
-    playChampionVoice,
-    initializeSounds
-};

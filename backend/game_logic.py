@@ -55,7 +55,7 @@ class GameManager:
         self.state["player_b"] = p2
         self.state["elo_b"] = e2
         
-        # Calculate starter
+        # Calculate starter (Higher Elo starts, PDL as tie-breaker)
         val_a = ELO_HIERARCHY.get(e1, 0)
         val_b = ELO_HIERARCHY.get(e2, 0)
         
@@ -64,27 +64,14 @@ class GameManager:
         elif val_b > val_a:
             starter = "B"
         else:
-            # Elo tie: check PDL
-            if pdl1 < pdl2: # Less PDL starts (Lower rank starts picking bans usually? Or Higher? Standard is Lower Elo starts)
-                # In standard Draft, Lower Seed/Elo usually gets side selection or first ban?
-                # Prompt assumption: "Elo menor começa" (implied from typical X1 logic where underdog has advantage or specific rule).
-                # Actually, in most X1 apps I built, Lower Elo starts banning to balance.
-                # Let's assume Lower Data starts.
-                # If A < B then A starts.
-                # Here: if val_a (Elo) is higher, A is better. So B (Worse) starts?
-                # Wait, original code: if val_a > val_b (A is better) -> starter = "A".
-                # User's previous logic: "Quem tem maior elo começa" (Higher Elo starts).
-                # Wait, let's look at previous code:
-                # if val_a > val_b: starter = "A"
-                # So Higher Elo starts.
-                # Tie-breaker: Higher PDL starts.
-                
-                if pdl1 > pdl2:
-                    starter = "A"
-                elif pdl2 > pdl1:
-                    starter = "B"
-                else:
-                    starter = random.choice(["A", "B"])
+            # Elo tie: use PDL as tie-breaker (Higher PDL starts)
+            if pdl1 > pdl2:
+                starter = "A"
+            elif pdl2 > pdl1:
+                starter = "B"
+            else:
+                # Both Elo and PDL are equal: random
+                starter = random.choice(["A", "B"])
             
         self.state["start_player"] = starter
         self.state["current_action_player"] = starter

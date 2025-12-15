@@ -191,16 +191,26 @@ def update_player_history_db(name, champion):
                 save_players_local_only(players)
 
 def clear_saved_data():
+    """Clear blacklist, match history, and player histories, but keep player accounts."""
     if USE_SUPABASE:
         try:
+            # Clear match history
             supabase.table("match_history").delete().neq("id", 0).execute()
-            supabase.table("players").delete().neq("name", "").execute()
+            # Clear blacklist
             supabase.table("blacklist").delete().neq("id", 0).execute()
+            # Clear player histories (but keep players)
+            response = supabase.table("players").select("name").execute()
+            for player in response.data:
+                supabase.table("players").update({"history": []}).eq("name", player["name"]).execute()
         except Exception as e:
             print(f"Supabase error: {e}")
     else:
-        if os.path.exists(DATA_FILE):
-            try:
-                os.remove(DATA_FILE)
-            except:
-                pass
+        data = load_data_local()
+        # Keep players but clear their histories
+        if "players" in data:
+            for name in data["players"]:
+                data["players"][name]["history"] = []
+        # Clear blacklist and match history
+        data["global_blacklist"] = []
+        data["match_history"] = []
+        save_data_local(data)

@@ -167,6 +167,8 @@ class GameManager:
         available = [c for c in candidates if c not in blacklist_names]
         
         # Step 2: Fallback - Only exclude champions played by THESE TWO players
+        # (This implements the "Pool Refill" logic: If the lane is empty due to Global Blacklist,
+        # we allow global blacklisted champs as long as P1 and P2 haven't played them)
         if len(available) < 4:
             # Filter blacklist for entries where 'player' is P1 or P2
             p1 = self.state["player_a"]

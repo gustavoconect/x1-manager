@@ -22,8 +22,35 @@ def get_champions_data(version):
         print(f"Erro ao buscar dados dos campeões: {e}")
         return {}
 
+
+MANUAL_MAPPING = {
+    "Wukong": "MonkeyKing",
+    "Kog'Maw": "KogMaw",
+    "Rek'Sai": "RekSai",
+    "Cho'Gath": "Chogath",
+    "Kai'Sa": "Kaisa",
+    "Kha'Zix": "Khazix",
+    "LeBlanc": "Leblanc",
+    "Vel'Koz": "Velkoz",
+    "Bel'Veth": "Belveth",
+    "Nunu & Willump": "Nunu",
+    "Renata Glasc": "Renata",
+    "Dr. Mundo": "DrMundo",
+    "Jarvan IV": "JarvanIV",
+    "Master Yi": "MasterYi",
+    "Lee Sin": "LeeSin",
+    "Tahm Kench": "TahmKench",
+    "Aurelion Sol": "AurelionSol",
+    "Miss Fortune": "MissFortune",
+    "Twisted Fate": "TwistedFate",
+    "Xin Zhao": "XinZhao", 
+}
+
 def get_champion_id_by_name(champion_name, champions_data):
     """Find the Data Dragon ID (e.g., 'MonkeyKing') for a given name (e.g., 'Wukong')."""
+    if champion_name in MANUAL_MAPPING:
+        return MANUAL_MAPPING[champion_name]
+
     if champion_name in champions_data:
         return champion_name
     for champ_id, data in champions_data.items():

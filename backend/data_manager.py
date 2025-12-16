@@ -146,6 +146,24 @@ class DataManager:
             except Exception as e:
                  print(f"Supabase Write Error (Blacklist): {e}")
 
+    def clear_all_data(self):
+        # Clear Local
+        self.save_json("match_data.json", {"players": self.get_players()}) # Keep players only
+
+        # Clear Supabase
+        if self.client:
+            try:
+                # Delete all matches (Delete rows where ID > -1)
+                self.client.table("match_history").delete().gt("id", -1).execute()
+            except Exception as e:
+                print(f"Supabase Clear Error (History): {e}")
+
+            try:
+                # Delete all blacklist (Delete rows where name is not empty)
+                self.client.table("blacklist").delete().neq("name", "").execute()
+            except Exception as e:
+                print(f"Supabase Clear Error (Blacklist): {e}")
+
 db = DataManager()
 
 # --- Wrapper Functions for game_logic.py ---
@@ -200,10 +218,5 @@ def update_player_data_db(name, wins=0, losses=0):
         db.save_players(players)
 
 def clear_saved_data():
-    """Clear local JSON only? Or Cloud too?"""
-    # Probably dangerous to clear cloud on reset. Only clear local/memory state logic handles this.
-    # But game_logic might call this.
-    # Let's verify what game_logic does with this.
-    # Assuming this clears blacklist/history for NEW install?
-    # Keeping implementation minimal/safe.
-    pass
+    """Clear match history and blacklist from both local and cloud storage."""
+    db.clear_all_data()

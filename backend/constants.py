@@ -31,7 +31,7 @@ LANE_CHAMPIONS = {
         "Aatrox", "Ambessa", "Amumu", "Bel'Veth", "Briar", "Cho'Gath", "Diana", "Dr. Mundo", 
         "Ekko", "Elise", "Evelynn", "Fiddlesticks", "Gragas", "Graves", "Gwen", "Hecarim", "Ivern", 
         "Jarvan IV", "Jax", "Jayce", "Karthus", "Kayn", "Kha'Zix", "Kindred", "Lee Sin", "Lillia", 
-        "Malphite", "Master Yi", "Naafiri", "Nidalee", "Nocturne", "Nunu e Willump", "Pantheon", 
+        "Malphite", "Master Yi", "Naafiri", "Nidalee", "Nocturne", "Nunu & Willump", "Pantheon", 
         "Qiyana", "Rammus", "Rek'Sai", "Rengar", "Sejuani", "Shaco", "Shyvana", "Skarner", "Sylas", 
         "Talon", "Teemo", "Trundle", "Udyr", "Vi", "Viego", "Volibear", "Warwick", "Wukong", 
         "Xin Zhao", "Zaahen", "Zac", "Zed"
@@ -50,7 +50,7 @@ LANE_CHAMPIONS = {
         "Tristana", "Twitch", "Varus", "Vayne", "Xayah", "Yunara", "Zeri", "Ziggs"
     ],
     "Support": [
-        "Alistar", "Bardo", "Blitzcrank", "Brand", "Braum", "Elise", "Fiddlesticks", "Janna", 
+        "Alistar", "Bard", "Blitzcrank", "Brand", "Braum", "Elise", "Fiddlesticks", "Janna", 
         "Karma", "Leona", "Lulu", "Lux", "Maokai", "Mel", "Milio", "Morgana", "Nami", "Nautilus", 
         "Neeko", "Pantheon", "Poppy", "Pyke", "Rakan", "Rell", "Renata Glasc", "Senna", 
         "Seraphine", "Shaco", "Shen", "Sona", "Soraka", "Swain", "Tahm Kench", "Taric", "Teemo", 

@@ -1,5 +1,6 @@
 import random
 from .constants import ELO_HIERARCHY, LANE_CHAMPIONS
+from .utils import get_champion_image_url
 from .data_manager import get_saved_blacklist, save_blacklist, clear_saved_data, get_match_history, save_match_history, get_players, register_player_db, update_player_history_db, update_player_data_db, remove_player_db
 
 class GameManager:
@@ -37,6 +38,7 @@ class GameManager:
             "announced_champions": {"A": [], "B": []},
             "knockout_bans": []
         }
+        self.champions_data = {}
 
     def update_player_data(self, name, elo, pdl):
         register_player_db(name, elo, pdl)
@@ -201,11 +203,20 @@ class GameManager:
         if len(available) < 4:
             available = candidates
             
+        drawn_names = []
         if len(available) >= 4:
-            self.state["drawn_champions"] = random.sample(available, 4)
+            drawn_names = random.sample(available, 4)
         else:
              # If lane has < 4 champs total (unlikely)?
-             self.state["drawn_champions"] = available
+             drawn_names = available
+
+        self.state["drawn_champions"] = []
+        for name in drawn_names:
+            image = get_champion_image_url(name, self.state.get("version", "13.24.1"), self.champions_data)
+            self.state["drawn_champions"].append({
+                "name": name,
+                "image": image
+            })
 
     def pick_champion(self, game, champion, image, player_name):
         self.state["picks"][game] = {

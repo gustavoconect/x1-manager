@@ -45,11 +45,12 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
     };
 
     // Phase 3: Pick champions (Game 1 = first pick, Game 2 = second pick)
-    const handlePick = async (game, champ) => {
-        playChampionVoice(champ); // Play champion voice!
-        const imgUrl = `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ}.png`;
+    const handlePick = async (game, champName, champImage) => {
+        playChampionVoice(champName); // Play champion voice!
+        // Use provided image or fallback if missing (legacy support)
+        const imgUrl = champImage || `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champName}.png`;
         const playerName = game === "Game 1" ? firstPickerName : secondPickerName;
-        const res = await api.post('/pick', { game, champion: champ, image: imgUrl, player: playerName });
+        const res = await api.post('/pick', { game, champion: champName, image: imgUrl, player: playerName });
         onStateUpdate(res.data);
     };
 
@@ -62,6 +63,12 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
 
     // ========== RENDER PHASES ==========
 
+    // Helper to normalize champion object (handle transition from string to object)
+    const getChampData = (c) => {
+        if (typeof c === 'string') return { name: c, image: `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${c}.png` };
+        return c; // { name, image }
+    };
+
     // Phase 1: Choice not made yet
     if (!choice_made) {
         return (
@@ -69,16 +76,19 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
                 <h2 className="text-3xl font-bold">Campeões Sorteados</h2>
 
                 <div className="flex gap-6">
-                    {drawn_champions.map(champ => (
-                        <div key={champ} className="w-40">
-                            <ChampionCard
-                                name={champ}
-                                image={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ}.png`}
-                                isSelected={false}
-                                isBanned={false}
-                            />
-                        </div>
-                    ))}
+                    {drawn_champions.map(c => {
+                        const champ = getChampData(c);
+                        return (
+                            <div key={champ.name} className="w-40">
+                                <ChampionCard
+                                    name={champ.name}
+                                    image={champ.image}
+                                    isSelected={false}
+                                    isBanned={false}
+                                />
+                            </div>
+                        );
+                    })}
                 </div>
 
                 <div className="bg-cardBg p-8 rounded-2xl border border-white/10 text-center max-w-lg">
@@ -112,16 +122,19 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
                 <h2 className="text-3xl font-bold">Campeões Sorteados</h2>
 
                 <div className="flex gap-6">
-                    {drawn_champions.map(champ => (
-                        <div key={champ} className="w-40">
-                            <ChampionCard
-                                name={champ}
-                                image={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ}.png`}
-                                isSelected={false}
-                                isBanned={false}
-                            />
-                        </div>
-                    ))}
+                    {drawn_champions.map(c => {
+                        const champ = getChampData(c);
+                        return (
+                            <div key={champ.name} className="w-40">
+                                <ChampionCard
+                                    name={champ.name}
+                                    image={champ.image}
+                                    isSelected={false}
+                                    isBanned={false}
+                                />
+                            </div>
+                        );
+                    })}
                 </div>
 
                 <div className="bg-cardBg p-8 rounded-2xl border border-white/10 text-center max-w-lg">
@@ -164,30 +177,30 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
                 </div>
 
                 <div className="flex gap-6 flex-wrap justify-center">
-                    {drawn_champions.map(champ => {
-                        const imgUrl = `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ}.png`;
-                        const isPicked = (hasPick1 && picks["Game 1"].champion === champ) ||
-                            (hasPick2 && picks["Game 2"].champion === champ);
+                    {drawn_champions.map(c => {
+                        const champ = getChampData(c);
+                        const isPicked = (hasPick1 && picks["Game 1"].champion === champ.name) ||
+                            (hasPick2 && picks["Game 2"].champion === champ.name);
 
                         return (
-                            <div key={champ} className="w-40 flex flex-col items-center gap-3">
+                            <div key={champ.name} className="w-40 flex flex-col items-center gap-3">
                                 <ChampionCard
-                                    name={champ}
-                                    image={imgUrl}
+                                    name={champ.name}
+                                    image={champ.image}
                                     isSelected={isPicked}
                                     isBanned={false}
                                 />
                                 {!isPicked && (
                                     <button
-                                        onClick={() => handlePick(currentGame, champ)}
+                                        onClick={() => handlePick(currentGame, champ.name, champ.image)}
                                         className={`${currentGame === "Game 1" ? "bg-blue-600 hover:bg-blue-500" : "bg-red-600 hover:bg-red-500"} text-white py-2 px-6 rounded-lg font-bold transition-all hover:scale-105`}
                                     >
                                         Escolher
                                     </button>
                                 )}
                                 {isPicked && (
-                                    <div className={`py-2 px-4 rounded-lg font-bold text-sm ${picks["Game 1"]?.champion === champ ? "bg-blue-500/20 text-blue-400" : "bg-red-500/20 text-red-400"}`}>
-                                        {picks["Game 1"]?.champion === champ ? "Jogo 1" : "Jogo 2"}
+                                    <div className={`py-2 px-4 rounded-lg font-bold text-sm ${picks["Game 1"]?.champion === champ.name ? "bg-blue-500/20 text-blue-400" : "bg-red-500/20 text-red-400"}`}>
+                                        {picks["Game 1"]?.champion === champ.name ? "Jogo 1" : "Jogo 2"}
                                     </div>
                                 )}
                             </div>
@@ -276,7 +289,7 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
                         </div>
                         <div className="flex justify-between bg-black/20 p-2 rounded">
                             <span>{player_b}</span>
-                            <span className={playerBSide === "Blue" ? "text-blue-400" : "text-red-400"}>{playerBSide} Side</span>
+                            <span className={playerBSide === "Blue" ? "text-red-400" : "text-blue-400"}>{playerBSide} Side</span>
                         </div>
                     </div>
                 </div>

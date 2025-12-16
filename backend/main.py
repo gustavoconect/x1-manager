@@ -30,6 +30,7 @@ async def startup_event():
     ddragon_version = get_latest_version()
     champions_data = get_champions_data(ddragon_version)
     game_instance.state["version"] = ddragon_version # Inject version
+    game_instance.champions_data = champions_data # Inject data for image resolution
     print(f"DataDragon Version: {ddragon_version}")
 
 @app.get("/state")

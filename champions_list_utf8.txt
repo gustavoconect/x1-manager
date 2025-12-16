@@ -1,0 +1,234 @@
+--- TOP ---
+Zaahen: 1285.5
+Darius: 1264.0
+Garen: 1263.6
+Sett: 1168.4
+Mordekaiser: 1159.1
+Renekton: 935.0
+Yorick: 914.3
+Fiora: 840.7
+Illaoi: 794.6
+K'Sante: 760.6
+Urgot: 735.2
+Nasus: 730.4
+Gnar: 725.8
+Sion: 713.8
+Kayle: 702.6
+Malphite: 692.1
+Aatrox: 690.5
+Teemo: 683.8
+Gwen: 674.3
+Gangplank: 666.7
+Ornn: 636.0
+Riven: 634.7
+Tryndamere: 604.0
+Singed: 603.6
+Camille: 593.5
+Dr. Mundo: 563.9
+Cho'Gath: 537.6
+Jax: 534.3
+Shen: 531.1
+Jayce: 520.3
+Olaf: 513.2
+Kled: 504.0
+Rumble: 488.5
+Irelia: 482.2
+Quinn: 440.7
+Yone: 438.2
+Ambessa: 416.1
+Kennen: 397.6
+Heimerdinger: 389.8
+Gragas: 371.1
+Volibear: 353.3
+Vladimir: 260.1
+Yasuo: 175.1
+Pantheon: 140.1
+Trundle: 134.7
+Vayne: 116.5
+Tahm Kench: 116.0
+Poppy: 94.1
+Warwick: 92.3
+Akali: 82.3
+Cassiopeia: 75.7
+Ryze: 69.2
+Wukong: 68.9
+
+--- JUNGLE ---
+Viego: 1525.5
+Lee Sin: 1274.4
+Kayn: 1266.1
+Master Yi: 1174.2
+Kha'Zix: 1069.7
+Nocturne: 1006.8
+Briar: 978.0
+Graves: 967.3
+Jarvan IV: 959.5
+Warwick: 938.9
+Lillia: 853.1
+Xin Zhao: 832.7
+Rengar: 825.5
+Amumu: 825.0
+Vi: 771.5
+Sylas: 744.6
+Kindred: 735.9
+Shaco: 726.7
+Evelynn: 704.0
+Hecarim: 670.9
+Diana: 668.6
+Wukong: 627.0
+Nunu e Willump: 593.8
+Jax: 589.3
+Rammus: 587.0
+Bel'Veth: 560.3
+Nidalee: 557.3
+Trundle: 512.9
+Sejuani: 512.6
+Zac: 487.9
+Shyvana: 483.6
+Udyr: 482.2
+Dr. Mundo: 475.0
+Ekko: 467.5
+Qiyana: 456.7
+Fiddlesticks: 455.0
+Talon: 441.6
+Volibear: 422.3
+Aatrox: 402.9
+Karthus: 401.3
+Rek'Sai: 366.3
+Elise: 360.8
+Ivern: 331.1
+Naafiri: 329.6
+Zed: 309.1
+Skarner: 302.9
+Malphite: 295.4
+Zaahen: 174.1
+Pantheon: 148.7
+Cho'Gath: 121.5
+Ambessa: 104.2
+Gwen: 93.5
+Jayce: 79.8
+Teemo: 76.9
+Gragas: 69.5
+
+--- MID ---
+Ahri: 1357.0
+Katarina: 1173.1
+Malzahar: 1158.4
+Akali: 1121.0
+Viktor: 1062.0
+Orianna: 1058.9
+Yasuo: 1027.8
+Syndra: 1017.0
+Fizz: 920.2
+Veigar: 914.2
+LeBlanc: 855.6
+Vex: 831.3
+Mel: 769.7
+Galio: 742.5
+Zed: 719.9
+Yone: 711.3
+Zoe: 711.0
+Twisted Fate: 703.3
+Azir: 681.6
+Hwei: 662.0
+Kassadin: 659.9
+Lissandra: 643.0
+Ryze: 640.2
+Aurelion Sol: 607.2
+Aurora: 579.7
+Sylas: 474.4
+Vladimir: 470.4
+Taliyah: 453.3
+Annie: 447.0
+Cassiopeia: 435.1
+Xerath: 422.0
+Diana: 409.8
+Akshan: 402.6
+Ekko: 397.1
+Irelia: 355.8
+Anivia: 350.1
+Naafiri: 338.2
+Lux: 258.0
+Qiyana: 237.6
+Talon: 199.5
+Ziggs: 153.3
+Morgana: 146.1
+Vel'Koz: 140.2
+Kennen: 138.2
+Kayle: 108.0
+Brand: 100.2
+Swain: 97.7
+Smolder: 79.5
+Heimerdinger: 74.8
+
+--- ADC ---
+Miss Fortune: 2153.6
+Kai'Sa: 1887.4
+Caitlyn: 1883.3
+Jhin: 1844.6
+Jinx: 1730.6
+Ashe: 1535.2
+Ezreal: 1525.0
+Lucian: 1203.6
+Yunara: 1177.1
+Tristana: 1152.3
+Smolder: 1150.5
+Aphelios: 1029.9
+Vayne: 1027.7
+Samira: 1020.6
+Sivir: 1018.6
+Xayah: 916.0
+Draven: 841.0
+Varus: 747.2
+Zeri: 746.5
+Twitch: 715.3
+Nilah: 552.7
+Kalista: 508.8
+Kog'Maw: 478.4
+Ziggs: 445.9
+Corki: 397.0
+
+--- SUP ---
+Janna: 2297.1
+Thresh: 1419.1
+Nautilus: 1389.0
+Nami: 1372.1
+Leona: 1331.7
+Lulu: 1188.5
+Pyke: 1187.6
+Milio: 1182.9
+Blitzcrank: 1156.9
+Lux: 1110.8
+Seraphine: 1105.5
+Karma: 1068.7
+Morgana: 983.7
+Soraka: 974.9
+Braum: 956.5
+Yuumi: 939.0
+Bardo: 922.9
+Zyra: 833.8
+Senna: 832.7
+Rakan: 831.7
+Neeko: 773.3
+Sona: 742.8
+Rell: 742.4
+Brand: 686.9
+Swain: 595.9
+Vel'Koz: 593.2
+Zilean: 588.7
+Tahm Kench: 586.5
+Alistar: 536.9
+Maokai: 503.0
+Taric: 496.9
+Renata Glasc: 491.7
+Poppy: 469.5
+Xerath: 464.3
+Pantheon: 416.7
+Mel: 384.4
+Elise: 152.1
+Shaco: 151.8
+Teemo: 99.3
+Shen: 97.1
+Fiddlesticks: 81.3
+Zoe: 69.8
+

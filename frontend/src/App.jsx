@@ -33,7 +33,12 @@ function App() {
 
     const handleSetup = (data) => {
         playLockSound(); // Major transition: Iniciar Confronto
-        api.post(`/setup`, data).then(res => setState(res.data));
+        api.post(`/setup`, data)
+            .then(res => setState(res.data))
+            .catch(err => {
+                console.error("Setup Error:", err);
+                alert("Erro ao iniciar duelo: " + (err.response?.data?.detail || err.message));
+            });
     };
 
     const handleBan = (lane) => {

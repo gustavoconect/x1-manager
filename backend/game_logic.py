@@ -170,46 +170,29 @@ class GameManager:
         blacklist_names = [x['name'] for x in blacklist]
         available = [c for c in candidates if c not in blacklist_names]
         
-        # Step 2: Fallback - Only exclude champions played by THESE TWO players
-        # (This implements the "Pool Refill" logic: If the lane is empty due to Global Blacklist,
-        # we allow global blacklisted champs as long as P1 and P2 haven't played them)
+        # Step 2: Pool Refill Logic (Recycle champions if lane pool is exhausted)
+        # Logic: Allow champions from Global Blacklist IF current P1 and P2 haven't played them.
         if len(available) < 4:
-            # Filter blacklist for entries where 'player' is P1 or P2
-            p1 = self.state["player_a"]
-            p2 = self.state["player_b"]
-            
-            # Get player histories to prioritize unused champs
+            # Get player histories (Source of Truth for "Who played what")
             players_data = get_players()
             p1_history = set(players_data.get(p1, {}).get("history", []))
             p2_history = set(players_data.get(p2, {}).get("history", []))
-            both_history = p1_history | p2_history  # Union of both histories
             
-            # Note: Older blacklist entries might not have 'player' key if migrated. Handle gracefully.
-            relevant_bans = set()
-            for entry in blacklist:
-                p = entry.get("player")
-                if p == p1 or p == p2:
-                    relevant_bans.add(entry["name"])
+            # Champions to exclude: Ones that P1 OR P2 have already played
+            relevant_bans = p1_history | p2_history
             
+            # Re-calculate available from ALL candidates, excluding only really played ones
             available = [c for c in candidates if c not in relevant_bans]
             
-            # If still short, prioritize champs not in either player's history
+            # If still short, it means players have played almost everything.
+            # Fallback: Prioritize champions not used by EITHER, then fill with anything.
             if len(available) < 4:
-                # Get champs not used by either player (even if in global blacklist)
-                unused_by_both = [c for c in candidates if c not in both_history]
-                # Sort: prioritize truly unused, then allow used ones
-                available = unused_by_both + [c for c in candidates if c not in unused_by_both]
-                available = list(dict.fromkeys(available))  # Remove duplicates, preserve order
-            
-        # Step 3: Emergency Fallback - Use entire lane pool
-        if len(available) < 4:
-            available = candidates
+                available = candidates
             
         drawn_names = []
         if len(available) >= 4:
             drawn_names = random.sample(available, 4)
         else:
-             # If lane has < 4 champs total (unlikely)?
              drawn_names = available
 
         self.state["drawn_champions"] = []
@@ -229,13 +212,16 @@ class GameManager:
         
         # Add to global blacklist ONLY if Groups phase
         if self.state["tournament_phase"] == "Groups":
-            self.state["global_blacklist"].append({
-                "name": champion,
-                "image": image,
-                "phase": self.state["tournament_phase"],
-                "player": player_name
-            })
-            save_blacklist(self.state["global_blacklist"])
+            # Check for duplicates before adding
+            exists = any(x['name'] == champion for x in self.state["global_blacklist"])
+            if not exists:
+                self.state["global_blacklist"].append({
+                    "name": champion,
+                    "image": image,
+                    "phase": self.state["tournament_phase"],
+                    "player": player_name # Storing picker is fine for metadata, History checks usage
+                })
+                save_blacklist(self.state["global_blacklist"])
         
         # Update Personal History for BOTH players (since both play the champion)
         update_player_history_db(self.state["player_a"], champion)

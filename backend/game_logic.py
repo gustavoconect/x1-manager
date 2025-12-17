@@ -171,15 +171,33 @@ class GameManager:
         available = [c for c in candidates if c not in blacklist_names]
         
         # Step 2: Pool Refill Logic (Recycle champions if lane pool is exhausted)
-        # Logic: Allow champions from Global Blacklist IF current P1 and P2 haven't played them.
+        # Logic: Allow champions from Global Blacklist IF current P1 and P2 haven't played them IN GROUPS PHASE.
         if len(available) < 4:
-            # Get player histories (Source of Truth for "Who played what")
-            players_data = get_players()
-            p1_history = set(players_data.get(p1, {}).get("history", []))
-            p2_history = set(players_data.get(p2, {}).get("history", []))
+            # Build history dynamically from match_history to ensure PHASE SEPARATION
+            # We cannot use 'players' table because it mixes Groups/Knockout usage.
+            p1 = self.state["player_a"]
+            p2 = self.state["player_b"]
             
-            # Champions to exclude: Ones that P1 OR P2 have already played
-            relevant_bans = p1_history | p2_history
+            p1_groups_history = set()
+            p2_groups_history = set()
+            
+            for m in self.state["match_history"]:
+                if m.get("phase") == "Groups":
+                    # Check if P1 played
+                    if m.get("player_a") == p1 or m.get("player_b") == p1:
+                        # Extract champions
+                         for k in ["game_1", "game_2"]:
+                             if k in m and "champion" in m[k]:
+                                 p1_groups_history.add(m[k]["champion"])
+                    
+                    # Check if P2 played
+                    if m.get("player_a") == p2 or m.get("player_b") == p2:
+                         for k in ["game_1", "game_2"]:
+                             if k in m and "champion" in m[k]:
+                                 p2_groups_history.add(m[k]["champion"])
+
+            # Champions to exclude: Ones that P1 OR P2 have already played IN GROUPS
+            relevant_bans = p1_groups_history | p2_groups_history
             
             # Re-calculate available from ALL candidates, excluding only really played ones
             available = [c for c in candidates if c not in relevant_bans]

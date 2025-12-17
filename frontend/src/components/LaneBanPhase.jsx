@@ -52,7 +52,7 @@ const LaneBanPhase = ({ bannedLanes, onBan, currentPlayer, currentPlayerName }) 
                                         "Support": "utility"
                                     };
                                     const imgKey = laneMap[lane];
-                                    const iconUrl = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/honor/roleicon_${imgKey}.png`;
+                                    const iconUrl = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-clash/global/default/assets/images/position-selector/positions/icon-position-${imgKey}.png`;
 
                                     return <img src={iconUrl} alt={lane} className="w-20 h-20" />;
                                 })()}

@@ -350,8 +350,25 @@ const Sidebar = ({ blacklist, history, onNewDuel, onFullReset, tournamentPhase, 
                                                 <div>
                                                     <div className="font-bold text-base text-hex-gold-100">{name}</div>
                                                     <div className="text-xs text-hex-blue-300/80 flex items-center gap-2">
-                                                        <span className={`w-2 h-2 rounded-full ${data.elo.includes("Ferro") ? "bg-gray-500" : data.elo.includes("Ouro") ? "bg-yellow-500" : data.elo.includes("Platina") ? "bg-cyan-400" : "bg-blue-500"}`}></span>
-                                                        {data.elo} • {data.pdl || 0} PDL
+                                                        {(() => {
+                                                            const rankName = data.elo.split(" ")[0].toLowerCase();
+                                                            const rankMap = {
+                                                                "ferro": "iron",
+                                                                "bronze": "bronze",
+                                                                "prata": "silver",
+                                                                "ouro": "gold",
+                                                                "platina": "platinum",
+                                                                "esmeralda": "emerald",
+                                                                "diamante": "diamond",
+                                                                "mestre": "master",
+                                                                "grão-mestre": "grandmaster",
+                                                                "desafiante": "challenger"
+                                                            };
+                                                            const key = rankMap[rankName] || "iron";
+                                                            const emblemUrl = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-${key}.png`;
+                                                            return <img src={emblemUrl} className="w-8 h-8 drop-shadow-md" alt={data.elo} />
+                                                        })()}
+                                                        <span>{data.elo} • {data.pdl || 0} PDL</span>
                                                     </div>
                                                 </div>
                                             </div>

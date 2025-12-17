@@ -60,8 +60,8 @@ const playSound = (key, volume = 0.4) => {
 
 export const playLockSound = () => playSound('LOCK', 0.5);
 export const playBanSound = () => playSound('BAN', 0.4);
-export const playHoverSound = () => playSound('HOVER', 0.1); // Subtle
-export const playClickSound = () => playSound('CLICK', 0.3);
+export const playHoverSound = () => playSound('HOVER', 0.25); // Increased from 0.1
+export const playClickSound = () => playSound('CLICK', 0.4); // Increased from 0.3
 export const playDraftCompleteSound = () => playSound('DRAFT_COMPLETE', 0.6);
 
 export const playChampionVoice = (championName) => {

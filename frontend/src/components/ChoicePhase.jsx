@@ -225,31 +225,25 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
     if (!side_choice_complete) {
         return (
             <div className="p-8 animate-fade-in flex flex-col items-center gap-8">
-                <h2 className="text-3xl font-bold font-display uppercase tracking-widest">Picks Finalizados!</h2>
+                <h2 className="text-3xl font-bold font-display uppercase tracking-widest text-hex-gold-100">Picks Definidos!</h2>
 
-                <div className="flex gap-8">
-                    <div className="bg-hex-blue-900/20 border border-hex-blue-500/30 p-8 rounded-xl text-center min-w-[200px]">
-                        <div className="text-xs font-bold text-hex-blue-300 mb-4 uppercase tracking-widest">JOGO 1 - IDA</div>
-                        <div className="relative inline-block">
-                            <img src={picks["Game 1"].image} className="w-32 h-32 rounded-full border-4 border-hex-blue-500 shadow-[0_0_20px_rgba(3,151,171,0.4)] mb-4" />
-                            <div className="absolute -bottom-3 inset-x-0 bg-hex-dark-500 border border-hex-blue-500 px-2 py-1 text-xs font-bold rounded-full text-hex-blue-300 w-max mx-auto">
-                                {firstPickerName}
-                            </div>
+                <div className="flex gap-6 w-full max-w-4xl justify-center">
+                    {/* Game 1 Card */}
+                    <div className="bg-hex-dark-500/50 border border-hex-blue-500/30 p-6 rounded-xl flex items-center gap-4 min-w-[300px]">
+                        <img src={picks["Game 1"].image} className="w-20 h-20 rounded-full border-2 border-hex-blue-500" />
+                        <div>
+                            <div className="text-xs uppercase tracking-widest text-hex-blue-300 mb-1">Jogo 1 (Ida)</div>
+                            <div className="font-bold text-xl font-display">{picks["Game 1"].champion}</div>
                         </div>
-                        <div className="font-bold text-xl font-display mt-2">{picks["Game 1"].champion}</div>
                     </div>
 
-                    <div className="flex items-center text-4xl text-hex-gold-500 font-display italic">VS</div>
-
-                    <div className="bg-red-900/20 border border-red-500/30 p-8 rounded-xl text-center min-w-[200px]">
-                        <div className="text-xs font-bold text-red-400 mb-4 uppercase tracking-widest">JOGO 2 - VOLTA</div>
-                        <div className="relative inline-block">
-                            <img src={picks["Game 2"].image} className="w-32 h-32 rounded-full border-4 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] mb-4" />
-                            <div className="absolute -bottom-3 inset-x-0 bg-hex-dark-500 border border-red-500 px-2 py-1 text-xs font-bold rounded-full text-red-400 w-max mx-auto">
-                                {secondPickerName}
-                            </div>
+                    {/* Game 2 Card */}
+                    <div className="bg-hex-dark-500/50 border border-red-500/30 p-6 rounded-xl flex items-center gap-4 min-w-[300px]">
+                        <img src={picks["Game 2"].image} className="w-20 h-20 rounded-full border-2 border-red-500" />
+                        <div>
+                            <div className="text-xs uppercase tracking-widest text-red-400 mb-1">Jogo 2 (Volta)</div>
+                            <div className="font-bold text-xl font-display">{picks["Game 2"].champion}</div>
                         </div>
-                        <div className="font-bold text-xl font-display mt-2">{picks["Game 2"].champion}</div>
                     </div>
                 </div>
 
@@ -281,21 +275,26 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
     const playerASide = game1_sides["A"];
     const playerBSide = game1_sides["B"];
 
+    const games = [
+        { name: "JOGO 1 (IDA)", pick: picks["Game 1"], pA_side: playerASide, pB_side: playerBSide },
+        { name: "JOGO 2 (VOLTA)", pick: picks["Game 2"], pA_side: playerASide === "Blue" ? "Red" : "Blue", pB_side: playerBSide === "Blue" ? "Red" : "Blue" }
+    ];
+
     return (
         <>
             {showReveal && picks && (
                 <DraftReveal
-                    playerA={firstPickerName}
-                    playerB={secondPickerName}
+                    playerA="JOGO 1 (IDA)"
+                    playerB="JOGO 2 (VOLTA)"
                     champA={picks["Game 1"]}
                     champB={picks["Game 2"]}
                     onDismiss={() => setShowReveal(false)}
                 />
             )}
 
-            <div className="p-8 animate-fade-in flex flex-col items-center gap-8">
-                <div className="flex justify-between items-center w-full max-w-4xl">
-                    <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-hex-gold-100 to-hex-gold-500 font-display uppercase tracking-widest drop-shadow-sm">🎮 Duelo Configurado!</h2>
+            <div className="p-8 animate-fade-in flex flex-col items-center gap-8 pb-20">
+                <div className="flex justify-between items-center w-full max-w-3xl">
+                    <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-hex-gold-100 to-hex-gold-500 font-display uppercase tracking-widest drop-shadow-sm">🎮 Duelo Configurado</h2>
                     <button
                         onClick={async () => {
                             if (!confirm("Finalizar duelo e salvar no histórico?")) return;
@@ -308,49 +307,49 @@ const ChoicePhase = ({ state, onStateUpdate }) => {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 w-full max-w-4xl">
-                    {/* Game 1 */}
-                    <div className="bg-gradient-to-br from-hex-blue-900/20 to-transparent border border-hex-blue-500/30 p-6 rounded-2xl relative overflow-hidden group hover:border-hex-blue-500/60 transition-colors">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 font-display text-6xl font-black text-white pointer-events-none group-hover:opacity-20 transition-opacity">01</div>
-                        <h3 className="text-xl font-bold text-hex-blue-300 mb-6 text-center uppercase tracking-widest border-b border-hex-blue-500/20 pb-4">JOGO 1 (IDA)</h3>
-                        <div className="flex justify-center mb-6">
-                            <img src={picks["Game 1"].image} className="w-40 h-40 rounded-full border-4 border-hex-blue-500 shadow-[0_0_30px_rgba(3,151,171,0.3)] animate-float" />
-                        </div>
-                        <div className="text-center font-bold text-3xl mb-6 font-display text-white">{picks["Game 1"].champion}</div>
-                        <div className="space-y-3 text-sm">
-                            <div className="flex justify-between bg-black/40 p-3 rounded border border-white/5">
-                                <span className="font-bold text-gray-300">{player_a}</span>
-                                <span className={`font-bold uppercase tracking-wider ${playerASide === "Blue" ? "text-blue-400" : "text-red-400"}`}>{playerASide} Side</span>
-                            </div>
-                            <div className="flex justify-between bg-black/40 p-3 rounded border border-white/5">
-                                <span className="font-bold text-gray-300">{player_b}</span>
-                                <span className={`font-bold uppercase tracking-wider ${playerBSide === "Blue" ? "text-blue-400" : "text-red-400"}`}>{playerBSide === "Blue" ? "Red" : "Blue"} Side</span>
-                            </div>
-                        </div>
-                    </div>
+                <div className="w-full max-w-3xl flex flex-col gap-8">
+                    {games.map((g, idx) => {
+                        const bluePlayer = g.pA_side === "Blue" ? player_a : player_b;
+                        const redPlayer = g.pA_side === "Red" ? player_a : player_b;
 
-                    {/* Game 2 */}
-                    <div className="bg-gradient-to-br from-red-900/20 to-transparent border border-red-500/30 p-6 rounded-2xl relative overflow-hidden group hover:border-red-500/60 transition-colors">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 font-display text-6xl font-black text-white pointer-events-none group-hover:opacity-20 transition-opacity">02</div>
-                        <h3 className="text-xl font-bold text-red-400 mb-6 text-center uppercase tracking-widest border-b border-red-500/20 pb-4">JOGO 2 (VOLTA)</h3>
-                        <div className="flex justify-center mb-6">
-                            <img src={picks["Game 2"].image} className="w-40 h-40 rounded-full border-4 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)] animate-float" style={{ animationDelay: '1s' }} />
-                        </div>
-                        <div className="text-center font-bold text-3xl mb-6 font-display text-white">{picks["Game 2"].champion}</div>
-                        <div className="space-y-3 text-sm">
-                            <div className="flex justify-between bg-black/40 p-3 rounded border border-white/5">
-                                <span className="font-bold text-gray-300">{player_a}</span>
-                                <span className={`font-bold uppercase tracking-wider ${playerASide === "Blue" ? "text-red-400" : "text-blue-400"}`}>{playerASide === "Blue" ? "Red" : "Blue"} Side</span>
+                        return (
+                            <div key={idx} className="bg-hex-dark-500/[0.8] border border-hex-gold-500/20 rounded-2xl p-6 relative overflow-hidden">
+                                <h3 className="text-center font-bold text-hex-gold-300 text-lg uppercase tracking-widest mb-6 border-b border-white/5 pb-2">{g.name}</h3>
+
+                                <div className="flex items-center justify-between px-4">
+                                    {/* Blue Side */}
+                                    <div className="flex flex-col items-center gap-2 w-1/3">
+                                        <span className="text-blue-400 font-bold uppercase tracking-wider text-xs">Blue Side</span>
+                                        <div className="relative group">
+                                            <img src={g.pick.image} className="w-20 h-20 rounded-full border-4 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+                                            <div className="absolute -bottom-2 inset-x-0 bg-blue-900 border border-blue-500 text-xs text-center rounded text-blue-100 font-bold py-0.5 transform scale-90">
+                                                {g.pick.champion}
+                                            </div>
+                                        </div>
+                                        <span className="font-bold text-white text-lg mt-2">{bluePlayer}</span>
+                                    </div>
+
+                                    {/* VS */}
+                                    <div className="flex flex-col items-center justify-center w-1/3">
+                                        <div className="text-4xl font-display italic text-hex-gold-500 opacity-80">VS</div>
+                                    </div>
+
+                                    {/* Red Side */}
+                                    <div className="flex flex-col items-center gap-2 w-1/3">
+                                        <span className="text-red-400 font-bold uppercase tracking-wider text-xs">Red Side</span>
+                                        <div className="relative group">
+                                            <img src={g.pick.image} className="w-20 h-20 rounded-full border-4 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
+                                            <div className="absolute -bottom-2 inset-x-0 bg-red-900 border border-red-500 text-xs text-center rounded text-red-100 font-bold py-0.5 transform scale-90">
+                                                {g.pick.champion}
+                                            </div>
+                                        </div>
+                                        <span className="font-bold text-white text-lg mt-2">{redPlayer}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex justify-between bg-black/40 p-3 rounded border border-white/5">
-                                <span className="font-bold text-gray-300">{player_b}</span>
-                                <span className={`font-bold uppercase tracking-wider ${playerBSide === "Blue" ? "text-red-400" : "text-blue-400"}`}>{playerBSide === "Blue" ? "Red" : "Blue"} Side</span>
-                            </div>
-                        </div>
-                    </div>
+                        );
+                    })}
                 </div>
-
-                <p className="text-hex-gold-700/50 text-xs mt-4 uppercase tracking-widest">* No Jogo 2, os lados são invertidos automaticamente.</p>
             </div>
         </>
     );

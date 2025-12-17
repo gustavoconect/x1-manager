@@ -42,12 +42,20 @@ const LaneBanPhase = ({ bannedLanes, onBan, currentPlayer, currentPlayerName }) 
                                 }
               `}
                         >
-                            <div className={`text-5xl ${isBanned ? 'opacity-20' : ''}`}>
-                                {lane === "Top" && "🛡️"}
-                                {lane === "Jungle" && "🌲"}
-                                {lane === "Mid" && "🔮"}
-                                {lane === "ADC" && "🏹"}
-                                {lane === "Support" && "❤️"}
+                            <div className={`transition-all duration-300 ${isBanned ? 'opacity-20 grayscale' : 'group-hover:scale-110'}`}>
+                                {(() => {
+                                    const laneMap = {
+                                        "Top": "top",
+                                        "Jungle": "jungle",
+                                        "Mid": "mid",
+                                        "ADC": "bottom",
+                                        "Support": "support"
+                                    };
+                                    const imgKey = laneMap[lane];
+                                    const iconUrl = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-positions/position-${imgKey}.png`;
+
+                                    return <img src={iconUrl} alt={lane} className="w-20 h-20" />;
+                                })()}
                             </div>
                             <span className="font-bold text-lg uppercase">{lane}</span>
                             {isBanned && <span className="text-xs text-red-500 font-bold">BANIDO</span>}

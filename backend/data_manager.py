@@ -136,33 +136,51 @@ class DataManager:
 
         if self.client:
             try:
-                # Assuming table has 'name' (PK) and 'image'
+                # If list is empty, CLEAR the table
                 if not blacklist_data:
-                    # Clear table if empty list? Not trivial with upsert.
-                    # Delete all not in list?
-                    pass
+                    self.client.table("blacklist").delete().neq("name", "").execute()
                 else:
                     self.client.table("blacklist").upsert(blacklist_data).execute()
             except Exception as e:
                  print(f"Supabase Write Error (Blacklist): {e}")
 
     def clear_all_data(self):
-        # Clear Local
-        self.save_json("match_data.json", {"players": self.get_players()}) # Keep players only
+        # 1. Reset Local Data (Keep players but clear their history)
+        players = self.get_players()
+        for p in players:
+            players[p]["history"] = [] # Wipe history
+            
+        self.save_json("match_data.json", {"players": players})
 
-        # Clear Supabase
+        # 2. Clear Supabase
         if self.client:
             try:
-                # Delete all matches (Delete rows where ID > -1)
+                # Delete all matches
                 self.client.table("match_history").delete().gt("id", -1).execute()
             except Exception as e:
                 print(f"Supabase Clear Error (History): {e}")
 
             try:
-                # Delete all blacklist (Delete rows where name is not empty)
+                # Delete all blacklist
                 self.client.table("blacklist").delete().neq("name", "").execute()
             except Exception as e:
                 print(f"Supabase Clear Error (Blacklist): {e}")
+            
+            try:
+                # Update Players (Reset history to empty list)
+                rows = []
+                for name, info in players.items():
+                    rows.append({
+                        "name": name,
+                        "elo": info.get("elo"),
+                        "pdl": info.get("pdl"),
+                        "wins": info.get("wins", 0),
+                        "losses": info.get("losses", 0),
+                        "history": [] # Explicitly empty
+                    })
+                self.client.table("players").upsert(rows).execute()
+            except Exception as e:
+                 print(f"Supabase Clear Error (Players History): {e}")
 
 db = DataManager()
 

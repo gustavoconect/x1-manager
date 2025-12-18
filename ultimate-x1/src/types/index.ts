@@ -1,4 +1,8 @@
 import { Lane } from "@/lib/constants";
+export { LANES } from "@/lib/constants";
+export type { Lane };
+
+
 
 export interface Champion {
     name: string;

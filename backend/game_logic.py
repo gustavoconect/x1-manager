@@ -39,6 +39,7 @@ class GameManager:
             "knockout_bans": [],
             "knockout_sides": {},  # {"Game 1": {"Blue": "A", "Red": "B"}}
             "game_winners": {}     # {"Game 1": "A"}
+        }
         self.champions_data = {}
 
     def update_player_data(self, name, elo, pdl):

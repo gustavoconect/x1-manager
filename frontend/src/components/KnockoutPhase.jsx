@@ -218,6 +218,24 @@ const KnockoutPhase = ({ state, onStateUpdate }) => {
         );
     }
 
+    // --- Series Phase (Picks) Logic ---
+    const allAnnounced = [...announced_champions["A"], ...announced_champions["B"]];
+    const availablePool = allAnnounced.filter(c => !knockout_bans.includes(c.name));
+
+    const handleSeriesPick = async (game, champ) => {
+        playChampionVoice(champ.name);
+        await api.post('/pick', {
+            game,
+            champion: champ.name,
+            image: champ.image,
+            player: "Both"
+        });
+        const res = await api.get('/state');
+        onStateUpdate(res.data);
+    };
+
+    const isGamePicked = (game) => picks && picks[game];
+
     // --- Manual Side & Result Logic ---
     const handleSideChoice = async (game, side, chooser) => {
         try {
@@ -312,8 +330,8 @@ const KnockoutPhase = ({ state, onStateUpdate }) => {
 
                     return (
                         <div key={gameLabel} className={`relative p-6 rounded-2xl border flex flex-col items-center gap-4 transition-all ${winner ? (winner === player_a ? 'border-blue-500 bg-blue-900/10' : 'border-red-500 bg-red-900/10')
-                                : pickData ? 'bg-primary/5 border-primary shadow-lg'
-                                    : 'bg-white/5 border-white/10 border-dashed'
+                            : pickData ? 'bg-primary/5 border-primary shadow-lg'
+                                : 'bg-white/5 border-white/10 border-dashed'
                             }`}>
                             <div className="absolute top-4 left-4 text-sm font-bold uppercase tracking-widest opacity-50">{gameLabel}</div>
 

@@ -90,6 +90,8 @@ class GameManager:
             "announce_turn_player": None,
             "announced_champions": {"A": [], "B": []},
             "knockout_bans": [],
+            "knockout_sides": {},
+            "game_winners": {},
             "version": current_version # Restore version
         }
 

@@ -36,8 +36,9 @@ class GameManager:
             "series_score": {"A": 0, "B": 0},
             "announce_turn_player": None,
             "announced_champions": {"A": [], "B": []},
-            "knockout_bans": []
-        }
+            "knockout_bans": [],
+            "knockout_sides": {},  # {"Game 1": {"Blue": "A", "Red": "B"}}
+            "game_winners": {}     # {"Game 1": "A"}
         self.champions_data = {}
 
     def update_player_data(self, name, elo, pdl):
@@ -292,8 +293,34 @@ class GameManager:
         if champion not in self.state["knockout_bans"]:
             self.state["knockout_bans"].append(champion)
             
-            # Logic: If both players banned, move to next step?
+        # Logic: If both players banned, move to next step?
             # For now just add to banned list. Frontend handles flow.
+        return self.state
+
+    def set_knockout_side(self, game, side, chooser):
+        """
+        chooser: "A" or "B" (Player Name or Key)
+        side: "Blue" or "Red"
+        """
+        # Resolve 'chooser' to Key 'A' or 'B' if passed as name
+        chooser_key = "A" if self.state["player_a"] == chooser else "B" if self.state["player_b"] == chooser else chooser
+        other_key = "B" if chooser_key == "A" else "A"
+        
+        selected_side = side
+        other_side = "Red" if side == "Blue" else "Blue"
+        
+        self.state["knockout_sides"][game] = {
+            chooser_key: selected_side,
+            other_key: other_side
+        }
+        return self.state
+
+    def set_game_winner(self, game, winner_name):
+        winner_key = "A" if self.state["player_a"] == winner_name else "B"
+        
+        self.state["game_winners"][game] = winner_name
+        self.state["series_score"][winner_key] += 1
+        
         return self.state
 
     # ========== RULE 6: Choice Phase Methods ==========

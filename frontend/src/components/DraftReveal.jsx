@@ -22,7 +22,7 @@ const DraftReveal = ({ playerA, playerB, champA, champB, onDismiss }) => {
         <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black/90 backdrop-blur-sm" onClick={onDismiss}>
             {/* Background Effects */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 via-transparent to-red-900/20"></div>
-            <div className="absolute inset-0 bg-[url('https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/bg-clouds-loop.jpg')] opacity-10 mix-blend-overlay animate-pulse"></div>
+            <div className="absolute inset-0 bg-[url('/assets/hex_clouds.jpg')] opacity-10 mix-blend-overlay animate-pulse"></div>
 
             {/* VS Badge */}
             <div className={`absolute z-20 transition-all duration-1000 ${phase === 'clash' || phase === 'reveal' ? 'scale-150 opacity-100 rotate-0' : 'scale-0 opacity-0 rotate-180'}`}>

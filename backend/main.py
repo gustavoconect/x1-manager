@@ -4,7 +4,7 @@ from typing import List, Optional
 import uvicorn
 import random
 
-from .models import PlayerSetup, BanLaneRequest, PickRequest, BlacklistAddRequest, PlayerRegisterRequest, ChampionAnnounceRequest, KnockoutBanRequest, BaseModel
+from .models import PlayerSetup, BanLaneRequest, PickRequest, BlacklistAddRequest, PlayerRegisterRequest, ChampionAnnounceRequest, KnockoutBanRequest, KnockoutSideRequest, GameWinnerRequest, BaseModel
 from .game_logic import game_instance
 from .utils import get_latest_version, get_champions_data, get_champion_image_url
 from .constants import LANE_CHAMPIONS
@@ -118,6 +118,16 @@ def announce_champion(req: ChampionAnnounceRequest):
 @app.post("/knockout-ban")
 def knockout_ban(req: KnockoutBanRequest):
     game_instance.ban_announced_champion(req.champion)
+    return game_instance.state
+
+@app.post("/knockout-side")
+def set_knockout_side(req: KnockoutSideRequest):
+    game_instance.set_knockout_side(req.game, req.side, req.chooser)
+    return game_instance.state
+
+@app.post("/game-winner")
+def set_game_winner(req: GameWinnerRequest):
+    game_instance.set_game_winner(req.game, req.winner)
     return game_instance.state
 
 @app.post("/finish-knockout")

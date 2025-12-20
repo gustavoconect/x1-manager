@@ -90,7 +90,7 @@ const Sidebar = ({ blacklist, history, onNewDuel, onFullReset, tournamentPhase, 
             <div className="w-[22rem] h-screen bg-hex-dark-100 border-r border-hex-gold-700 flex flex-col fixed left-0 top-0 overflow-hidden shadow-2xl z-50">
                 {/* Header */}
                 <div className="p-8 border-b border-hex-gold-700 bg-hex-dark-500 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/bg-clouds-loop.jpg')] opacity-20 mix-blend-overlay"></div>
+                    <div className="absolute inset-0 bg-[url('/assets/hex_clouds.jpg')] opacity-20 mix-blend-overlay"></div>
                     <h1 className="relative text-3xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-b from-hex-gold-100 to-hex-gold-500 uppercase tracking-widest drop-shadow-sm text-center">
                         X1 Manager
                     </h1>
@@ -365,7 +365,7 @@ const Sidebar = ({ blacklist, history, onNewDuel, onFullReset, tournamentPhase, 
                                                                 "desafiante": "challenger"
                                                             };
                                                             const key = rankMap[rankName] || "iron";
-                                                            const emblemUrl = `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-${key}.png`;
+                                                            const emblemUrl = `https://raw.communitydragon.org/14.18/plugins/rcp-fe-lol-static-assets/global/default/ranked-emblem/emblem-${key}.png`;
                                                             return <img src={emblemUrl} className="w-8 h-8 drop-shadow-md" alt={data.elo} />
                                                         })()}
                                                         <span>{data.elo} • {data.pdl || 0} PDL</span>

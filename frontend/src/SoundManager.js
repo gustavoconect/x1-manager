@@ -6,10 +6,10 @@ const SOUND_ASSETS = {
     // User confirmed Lock works (likely standard path)
     LOCK: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-lockin-button-click.ogg",
     // User reported others failed in 13.24, trying 15.24 standard + specific Ban fix
-    HOVER: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-button-hover.ogg",
-    CLICK: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-button-click.ogg",
+    HOVER: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-lockin-button-hover.ogg", // Updated per user
+    CLICK: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-button-swap-click.ogg", // Updated per user
     BAN: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-draft-ban-button-click.ogg", // Updated per user
-    DRAFT_COMPLETE: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/sfx-cs-phases-ready-finalization.ogg"
+    DRAFT_COMPLETE: "https://raw.communitydragon.org/15.24/plugins/rcp-fe-lol-champ-select/global/default/sounds/music-cs-draft-finalization-01.ogg"  // Updated per user
 };
 
 let audioContext = null;

@@ -18,7 +18,9 @@ final, conforme descrito abaixo
 3. FASE DE GRUPOS (PONTOS CORRIDOS)
 • Todos os jogadores se enfrentam em uma melhor de 2 (MD2): uma partida no lado Azul e outra no
 lado Vermelho.
-• Os 6 melhores colocados avançam para o mata-mata.
+• Todos os jogadores avançam para o mata-mata; porém, quanto melhor a colocação na fase de
+pontos, maiores serão as vantagens do jogador no mata-mata (seed, escolha de vantagens, byes,
+ou ordem de escolha conforme definido pelos organizadores)
 
 4. ESCOLHA DE ROTA — FASE DE GRUPOS
 • Os jogadores alternam o banimento das rotas: Top, JG (Selva), Mid, ADC, Suporte.
@@ -31,6 +33,8 @@ lado Vermelho.
 torneio na fase de grupos.
 • Caso os campeões disponíveis na rota se esgotem, liberam-se campeões ainda não utilizados por
 ambos os jogadores do duelo (priorizando campeões não usados por nenhum dos dois).
+• Se ainda assim não houver campeões suficientes, o organizador poderá permitir reuso ou aplicar
+regra de reabastecimento definida previamente
 
 6. ESCOLHA DE CAMPEÕES NA MATCH (MD2) — FASE DE GRUPOS
 • O jogador de menor Elo, ao ver os 4 campeões sorteados, escolhe entre:
@@ -64,11 +68,12 @@ não tenha usado o campeão já na fase mata-mata.
 • Os campeões restantes (após os bans) ficam disponíveis para seleção na série.
 
 10. ESCOLHA DE CAMPEÃO POR PARTIDA — MATA-MATA
-• Os jogadores alternam a escolha de qual campeão será jogado em cada partida da série
-(MD3/MD5).
+• Os jogadores alternam a escolha de ordem dos campeões para as partidas da série (MD3/MD5),
+começando pelo jogador que foi pior na fase de grupos.
 • O campeão escolhido será utilizado por AMBOS os jogadores naquela partida.
-• O jogador que não escolheu o campeão para a partida escolhe o lado do mapa (Azul/Vermelho)
-para essa partida
+• Após as escolhas definidas, o melhor seed (jogador com melhor colocação na fase de grupos)
+escolhe o lado do mapa para a primeira partida.
+• Nas partidas seguintes, quem escolhe o mapa é o jogador que perdeu a partida anterior.
 
 11. ÚLTIMA PARTIDA DA SÉRIE
 • Caso seja necessária a partida decisiva (ex.: jogo 3 na MD3 ou jogo 5 na MD5), o campeão será

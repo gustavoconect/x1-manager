@@ -20,8 +20,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Security Middleware
+import os
+from fastapi import Request
+
+@app.middleware("http")
+async def check_admin_header(request: Request, call_next):
+    # Public routes that are technically POST but safe or needed? 
+    # Actually, all POSTs change state in this app.
+    # We only protect writing methods: POST, PUT, DELETE, PATCH
+    if request.method in ["POST", "PUT", "DELETE", "PATCH"]:
+        # Get secret from Environment (default to 'x1-admin' for safety if not set)
+        admin_secret = os.getenv("ADMIN_SECRET", "x1-admin")
+        
+        # Check Header
+        request_secret = request.headers.get("x-admin-secret")
+        
+        if request_secret != admin_secret:
+            # Check query param as fallback (optional, useful for manual curl)
+            # if request.query_params.get("secret") != admin_secret:
+            from fastapi.responses import JSONResponse
+            return JSONResponse(
+                status_code=403, 
+                content={"detail": "Acesso Negado: Senha de Admin Incorreta"}
+            )
+            
+    response = await call_next(request)
+    return response
+
 # Startup
-ddragon_version = "13.24.1"
+ddragon_version = "15.24.1"
 champions_data = {}
 
 @app.on_event("startup")

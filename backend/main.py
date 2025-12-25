@@ -37,13 +37,17 @@ async def check_admin_header(request: Request, call_next):
         request_secret = request.headers.get("x-admin-secret")
         
         if request_secret != admin_secret:
-            # Check query param as fallback (optional, useful for manual curl)
-            # if request.query_params.get("secret") != admin_secret:
             from fastapi.responses import JSONResponse
-            return JSONResponse(
+            # Precisamos adicionar headers de CORS manualmente pois o middleware de CORS 
+            # padrão do FastAPI é pulado quando retornamos a resposta diretamente aqui.
+            response = JSONResponse(
                 status_code=403, 
                 content={"detail": "Acesso Negado: Senha de Admin Incorreta"}
             )
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            response.headers["Access-Control-Allow-Methods"] = "*"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+            return response
             
     response = await call_next(request)
     return response

@@ -103,6 +103,9 @@ class GameManager:
         self.reset_duel()
 
     def setup_game(self, p1, e1, pdl1, p2, e2, pdl2, phase="Groups", series="MD2", announce_first=None):
+        # Hotfix: Reload Blacklist from DB to ensure sync (e.g. if edited manually or via scripts)
+        self.state["global_blacklist"] = get_saved_blacklist()
+        
         self.state["player_a"] = p1
         self.state["elo_a"] = e1
         self.state["pdl_a"] = pdl1

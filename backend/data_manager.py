@@ -136,11 +136,20 @@ class DataManager:
 
         if self.client:
             try:
-                # If list is empty, CLEAR the table
-                if not blacklist_data:
-                    self.client.table("blacklist").delete().neq("name", "").execute()
-                else:
-                    self.client.table("blacklist").upsert(blacklist_data).execute()
+                # STRATEGY CHANGE: Always Wipe and Rewrite to prevent ID conflicts and Duplicates
+                # 1. Delete all existing entries
+                self.client.table("blacklist").delete().neq("id", -1).execute()
+                
+                # 2. Insert new data (strip IDs if present to let DB auto-gen new ones)
+                if blacklist_data:
+                    clean_data = []
+                    for item in blacklist_data:
+                        # Create copy without 'id' to ensure auto-increment works
+                        clean_item = {k: v for k, v in item.items() if k != 'id'}
+                        clean_data.append(clean_item)
+                        
+                    self.client.table("blacklist").insert(clean_data).execute()
+                    
             except Exception as e:
                  print(f"Supabase Write Error (Blacklist): {e}")
 

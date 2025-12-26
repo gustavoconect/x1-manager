@@ -191,12 +191,52 @@ class DataManager:
             except Exception as e:
                  print(f"Supabase Clear Error (Players History): {e}")
 
+    def rebuild_blacklist_from_history(self):
+        """Source of Truth: Rebuild blacklist table entirely from Match History."""
+        print("DataManager: Rebuilding Blacklist from History...")
+        history = self.get_match_history()
+        
+        # Calculate Blacklist
+        new_blacklist = []
+        seen_names = set()
+        
+        CDN_URL = "https://ddragon.leagueoflegends.com/cdn/15.24.1/img/champion/" # Fallback
+        
+        for match in history:
+            # Only count GROUPS phase
+            if match.get("phase") == "Groups" or (not match.get("phase") and 'game_1' in match):
+                 for key in ['game_1', 'game_2']:
+                     game = match.get(key, {})
+                     champ = game.get('champion')
+                     if champ and champ not in seen_names:
+                         image = game.get('image')
+                         if not image:
+                             clean = champ.replace(" ", "").replace("'", "").replace(".", "")
+                             image = f"{CDN_URL}{clean}.png"
+                             
+                         new_blacklist.append({
+                             "name": champ,
+                             "image": image,
+                             "phase": "Groups",
+                             "player": "HistoryDerived"
+                         })
+                         seen_names.add(champ)
+        
+        # Save to DB (caches it)
+        print(f"DataManager: Derived {len(new_blacklist)} bans from history.")
+        self.save_blacklist(new_blacklist)
+        return new_blacklist
+
 db = DataManager()
 
 # --- Wrapper Functions for game_logic.py ---
 
+def rebuild_blacklist_from_history():
+    return db.rebuild_blacklist_from_history()
+
 def get_saved_blacklist():
     return db.get_blacklist()
+
 
 def save_blacklist(data):
     db.save_blacklist(data)

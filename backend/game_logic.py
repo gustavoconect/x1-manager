@@ -1,7 +1,7 @@
 import random
 from .constants import ELO_HIERARCHY, LANE_CHAMPIONS
 from .utils import get_champion_image_url
-from .data_manager import get_saved_blacklist, save_blacklist, clear_saved_data, get_match_history, save_match_history, get_players, register_player_db, update_player_history_db, update_player_data_db, remove_player_db
+from .data_manager import get_saved_blacklist, save_blacklist, clear_saved_data, get_match_history, save_match_history, get_players, register_player_db, update_player_history_db, update_player_data_db, remove_player_db, rebuild_blacklist_from_history
 
 class GameManager:
     def __init__(self):
@@ -57,7 +57,8 @@ class GameManager:
     def reset_duel(self):
         """Reset duel state but keep blacklist and history."""
         # Reload Blacklist to ensure sync (Fix for stale cache on reset)
-        saved_bl = get_saved_blacklist()
+        # REFACTOR: Rebuild from History to be 100% sure
+        self.state["global_blacklist"] = rebuild_blacklist_from_history()
         saved_hist = self.state["match_history"]
         # Preserve version if it exists, else default to a newer one
         current_version = self.state.get("version", "15.24.1")
@@ -83,7 +84,7 @@ class GameManager:
             "picks": {},
             "side_choice_complete": False,
             "game1_sides": {},
-            "global_blacklist": saved_bl,
+            "global_blacklist": self.state["global_blacklist"],
             "match_history": saved_hist,
             "tournament_phase": "Groups",
             "series_format": "MD2",
@@ -105,7 +106,8 @@ class GameManager:
 
     def setup_game(self, p1, e1, pdl1, p2, e2, pdl2, phase="Groups", series="MD2", announce_first=None):
         # Hotfix: Reload Blacklist from DB to ensure sync (e.g. if edited manually or via scripts)
-        self.state["global_blacklist"] = get_saved_blacklist()
+        # REFACTOR: Rebuild from History
+        self.state["global_blacklist"] = rebuild_blacklist_from_history()
         
         self.state["player_a"] = p1
         self.state["elo_a"] = e1

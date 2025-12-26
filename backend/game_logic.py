@@ -56,7 +56,8 @@ class GameManager:
 
     def reset_duel(self):
         """Reset duel state but keep blacklist and history."""
-        saved_bl = self.state["global_blacklist"]
+        # Reload Blacklist to ensure sync (Fix for stale cache on reset)
+        saved_bl = get_saved_blacklist()
         saved_hist = self.state["match_history"]
         # Preserve version if it exists, else default to a newer one
         current_version = self.state.get("version", "15.24.1")
